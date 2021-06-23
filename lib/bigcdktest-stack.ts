@@ -29,7 +29,7 @@ export class BigcdktestStack extends cdk.Stack {
 
     const builder = new initMetadata.CfnInitMetadataBuilder(autoscalinggroup, 'configset1')
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i <25; i++) {
       const file = new initMetadata.CfnInitScriptAsset(this, `${i}testScript`, {
         friendlyName: `${i}-testScript`,
         shouldExecute: false,

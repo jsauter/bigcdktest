@@ -1,0 +1,702 @@
+Resources:
+  MyBucketF68F3FF0:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: jsauter-my-bucket
+      VersioningConfiguration:
+        Status: Enabled
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Metadata:
+      aws:cdk:path: BigcdktestStack/MyBucket/Resource
+  ASGInstanceSecurityGroup0525485D:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: BigcdktestStack/ASG/InstanceSecurityGroup
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: Allow all outbound traffic by default
+          IpProtocol: "-1"
+      Tags:
+        - Key: Name
+          Value: BigcdktestStack/ASG
+      VpcId: vpc-894b89ef
+    Metadata:
+      aws:cdk:path: BigcdktestStack/ASG/InstanceSecurityGroup/Resource
+  ASGInstanceRoleE263A41B:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+        Version: "2012-10-17"
+      Tags:
+        - Key: Name
+          Value: BigcdktestStack/ASG
+    Metadata:
+      aws:cdk:path: BigcdktestStack/ASG/InstanceRole/Resource
+  ASGInstanceRoleDefaultPolicy7636D8BF:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: s3:*
+            Effect: Allow
+            Resource:
+              Fn::Join:
+                - ""
+                - - "arn:"
+                  - Ref: AWS::Partition
+                  - ":s3:::"
+                  - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+                  - /
+                  - Fn::Select:
+                      - 0
+                      - Fn::Split:
+                          - "||"
+                          - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+                  - Fn::Select:
+                      - 1
+                      - Fn::Split:
+                          - "||"
+                          - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+        Version: "2012-10-17"
+      PolicyName: ASGInstanceRoleDefaultPolicy7636D8BF
+      Roles:
+        - Ref: ASGInstanceRoleE263A41B
+    Metadata:
+      aws:cdk:path: BigcdktestStack/ASG/InstanceRole/DefaultPolicy/Resource
+  ASGInstanceProfile0A2834D7:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - Ref: ASGInstanceRoleE263A41B
+    Metadata:
+      aws:cdk:path: BigcdktestStack/ASG/InstanceProfile
+  ASGLaunchConfigC00AF12B:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      ImageId:
+        Ref: SsmParameterValueawsserviceamiamazonlinuxlatestamznamihvmx8664gp2C96584B6F00A464EAD1953AFF4B05118Parameter
+      InstanceType: t2.micro
+      IamInstanceProfile:
+        Ref: ASGInstanceProfile0A2834D7
+      SecurityGroups:
+        - Fn::GetAtt:
+            - ASGInstanceSecurityGroup0525485D
+            - GroupId
+      UserData:
+        Fn::Base64: "#!/bin/bash"
+    DependsOn:
+      - ASGInstanceRoleDefaultPolicy7636D8BF
+      - ASGInstanceRoleE263A41B
+    Metadata:
+      aws:cdk:path: BigcdktestStack/ASG/LaunchConfig
+      AWS::CloudFormation::Authentication:
+        rolebased:
+          type: S3
+          buckets:
+            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+          roleName:
+            Ref: ASGInstanceRoleE263A41B
+      AWS::CloudFormation::Init:
+        configSets:
+          configset1:
+            - configset1
+        configset1:
+          files:
+            \temp\scripts\/0testScript:
+              source:
+                Fn::Join:
+                  - ""
+                  - - https://s3.us-west-2.
+                    - Ref: AWS::URLSuffix
+                    - /
+                    - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+                    - /
+                    - Fn::Select:
+                        - 0
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+                    - Fn::Select:
+                        - 1
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+              mode: "000755"
+              owner: root
+              group: root
+            \temp\scripts\/1testScript:
+              source:
+                Fn::Join:
+                  - ""
+                  - - https://s3.us-west-2.
+                    - Ref: AWS::URLSuffix
+                    - /
+                    - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+                    - /
+                    - Fn::Select:
+                        - 0
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+                    - Fn::Select:
+                        - 1
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+              mode: "000755"
+              owner: root
+              group: root
+            \temp\scripts\/2testScript:
+              source:
+                Fn::Join:
+                  - ""
+                  - - https://s3.us-west-2.
+                    - Ref: AWS::URLSuffix
+                    - /
+                    - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+                    - /
+                    - Fn::Select:
+                        - 0
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+                    - Fn::Select:
+                        - 1
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+              mode: "000755"
+              owner: root
+              group: root
+            \temp\scripts\/3testScript:
+              source:
+                Fn::Join:
+                  - ""
+                  - - https://s3.us-west-2.
+                    - Ref: AWS::URLSuffix
+                    - /
+                    - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+                    - /
+                    - Fn::Select:
+                        - 0
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+                    - Fn::Select:
+                        - 1
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+              mode: "000755"
+              owner: root
+              group: root
+            \temp\scripts\/4testScript:
+              source:
+                Fn::Join:
+                  - ""
+                  - - https://s3.us-west-2.
+                    - Ref: AWS::URLSuffix
+                    - /
+                    - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+                    - /
+                    - Fn::Select:
+                        - 0
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+                    - Fn::Select:
+                        - 1
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+              mode: "000755"
+              owner: root
+              group: root
+            \temp\scripts\/5testScript:
+              source:
+                Fn::Join:
+                  - ""
+                  - - https://s3.us-west-2.
+                    - Ref: AWS::URLSuffix
+                    - /
+                    - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+                    - /
+                    - Fn::Select:
+                        - 0
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+                    - Fn::Select:
+                        - 1
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+              mode: "000755"
+              owner: root
+              group: root
+            \temp\scripts\/6testScript:
+              source:
+                Fn::Join:
+                  - ""
+                  - - https://s3.us-west-2.
+                    - Ref: AWS::URLSuffix
+                    - /
+                    - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+                    - /
+                    - Fn::Select:
+                        - 0
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+                    - Fn::Select:
+                        - 1
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+              mode: "000755"
+              owner: root
+              group: root
+            \temp\scripts\/7testScript:
+              source:
+                Fn::Join:
+                  - ""
+                  - - https://s3.us-west-2.
+                    - Ref: AWS::URLSuffix
+                    - /
+                    - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+                    - /
+                    - Fn::Select:
+                        - 0
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+                    - Fn::Select:
+                        - 1
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+              mode: "000755"
+              owner: root
+              group: root
+            \temp\scripts\/8testScript:
+              source:
+                Fn::Join:
+                  - ""
+                  - - https://s3.us-west-2.
+                    - Ref: AWS::URLSuffix
+                    - /
+                    - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+                    - /
+                    - Fn::Select:
+                        - 0
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+                    - Fn::Select:
+                        - 1
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+              mode: "000755"
+              owner: root
+              group: root
+            \temp\scripts\/9testScript:
+              source:
+                Fn::Join:
+                  - ""
+                  - - https://s3.us-west-2.
+                    - Ref: AWS::URLSuffix
+                    - /
+                    - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+                    - /
+                    - Fn::Select:
+                        - 0
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+                    - Fn::Select:
+                        - 1
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+              mode: "000755"
+              owner: root
+              group: root
+            \temp\scripts\/10testScript:
+              source:
+                Fn::Join:
+                  - ""
+                  - - https://s3.us-west-2.
+                    - Ref: AWS::URLSuffix
+                    - /
+                    - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+                    - /
+                    - Fn::Select:
+                        - 0
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+                    - Fn::Select:
+                        - 1
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+              mode: "000755"
+              owner: root
+              group: root
+            \temp\scripts\/11testScript:
+              source:
+                Fn::Join:
+                  - ""
+                  - - https://s3.us-west-2.
+                    - Ref: AWS::URLSuffix
+                    - /
+                    - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+                    - /
+                    - Fn::Select:
+                        - 0
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+                    - Fn::Select:
+                        - 1
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+              mode: "000755"
+              owner: root
+              group: root
+            \temp\scripts\/12testScript:
+              source:
+                Fn::Join:
+                  - ""
+                  - - https://s3.us-west-2.
+                    - Ref: AWS::URLSuffix
+                    - /
+                    - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+                    - /
+                    - Fn::Select:
+                        - 0
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+                    - Fn::Select:
+                        - 1
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+              mode: "000755"
+              owner: root
+              group: root
+            \temp\scripts\/13testScript:
+              source:
+                Fn::Join:
+                  - ""
+                  - - https://s3.us-west-2.
+                    - Ref: AWS::URLSuffix
+                    - /
+                    - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+                    - /
+                    - Fn::Select:
+                        - 0
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+                    - Fn::Select:
+                        - 1
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+              mode: "000755"
+              owner: root
+              group: root
+            \temp\scripts\/14testScript:
+              source:
+                Fn::Join:
+                  - ""
+                  - - https://s3.us-west-2.
+                    - Ref: AWS::URLSuffix
+                    - /
+                    - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+                    - /
+                    - Fn::Select:
+                        - 0
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+                    - Fn::Select:
+                        - 1
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+              mode: "000755"
+              owner: root
+              group: root
+            \temp\scripts\/15testScript:
+              source:
+                Fn::Join:
+                  - ""
+                  - - https://s3.us-west-2.
+                    - Ref: AWS::URLSuffix
+                    - /
+                    - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+                    - /
+                    - Fn::Select:
+                        - 0
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+                    - Fn::Select:
+                        - 1
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+              mode: "000755"
+              owner: root
+              group: root
+            \temp\scripts\/16testScript:
+              source:
+                Fn::Join:
+                  - ""
+                  - - https://s3.us-west-2.
+                    - Ref: AWS::URLSuffix
+                    - /
+                    - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+                    - /
+                    - Fn::Select:
+                        - 0
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+                    - Fn::Select:
+                        - 1
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+              mode: "000755"
+              owner: root
+              group: root
+            \temp\scripts\/17testScript:
+              source:
+                Fn::Join:
+                  - ""
+                  - - https://s3.us-west-2.
+                    - Ref: AWS::URLSuffix
+                    - /
+                    - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+                    - /
+                    - Fn::Select:
+                        - 0
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+                    - Fn::Select:
+                        - 1
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+              mode: "000755"
+              owner: root
+              group: root
+            \temp\scripts\/18testScript:
+              source:
+                Fn::Join:
+                  - ""
+                  - - https://s3.us-west-2.
+                    - Ref: AWS::URLSuffix
+                    - /
+                    - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+                    - /
+                    - Fn::Select:
+                        - 0
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+                    - Fn::Select:
+                        - 1
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+              mode: "000755"
+              owner: root
+              group: root
+            \temp\scripts\/19testScript:
+              source:
+                Fn::Join:
+                  - ""
+                  - - https://s3.us-west-2.
+                    - Ref: AWS::URLSuffix
+                    - /
+                    - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+                    - /
+                    - Fn::Select:
+                        - 0
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+                    - Fn::Select:
+                        - 1
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+              mode: "000755"
+              owner: root
+              group: root
+            \temp\scripts\/20testScript:
+              source:
+                Fn::Join:
+                  - ""
+                  - - https://s3.us-west-2.
+                    - Ref: AWS::URLSuffix
+                    - /
+                    - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+                    - /
+                    - Fn::Select:
+                        - 0
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+                    - Fn::Select:
+                        - 1
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+              mode: "000755"
+              owner: root
+              group: root
+            \temp\scripts\/21testScript:
+              source:
+                Fn::Join:
+                  - ""
+                  - - https://s3.us-west-2.
+                    - Ref: AWS::URLSuffix
+                    - /
+                    - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+                    - /
+                    - Fn::Select:
+                        - 0
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+                    - Fn::Select:
+                        - 1
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+              mode: "000755"
+              owner: root
+              group: root
+            \temp\scripts\/22testScript:
+              source:
+                Fn::Join:
+                  - ""
+                  - - https://s3.us-west-2.
+                    - Ref: AWS::URLSuffix
+                    - /
+                    - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+                    - /
+                    - Fn::Select:
+                        - 0
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+                    - Fn::Select:
+                        - 1
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+              mode: "000755"
+              owner: root
+              group: root
+            \temp\scripts\/23testScript:
+              source:
+                Fn::Join:
+                  - ""
+                  - - https://s3.us-west-2.
+                    - Ref: AWS::URLSuffix
+                    - /
+                    - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50
+                    - /
+                    - Fn::Select:
+                        - 0
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+                    - Fn::Select:
+                        - 1
+                        - Fn::Split:
+                            - "||"
+                            - Ref: AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD
+              mode: "000755"
+              owner: root
+              group: root
+  ASG46ED3070:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      MaxSize: "1"
+      MinSize: "1"
+      LaunchConfigurationName:
+        Ref: ASGLaunchConfigC00AF12B
+      Tags:
+        - Key: Name
+          PropagateAtLaunch: true
+          Value: BigcdktestStack/ASG
+      VPCZoneIdentifier:
+        - subnet-258abc6c
+        - subnet-7b8cba32
+        - subnet-a63f20c1
+        - subnet-ed041b8a
+        - subnet-bca414e7
+    UpdatePolicy:
+      AutoScalingScheduledAction:
+        IgnoreUnmodifiedGroupSizeProperties: true
+    Metadata:
+      aws:cdk:path: BigcdktestStack/ASG/ASG
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Analytics: v2:deflate64:H4sIAAAAAAAAE12Py27CMBBFv4W9MxCyaXelLFAlFlH4AmuYpCaJXXnGVMjyv9dOVKR2NY9753FqqHevsNu86W+u8DpuIzpPEC+icVRHZ1l8QFEdsQseSR1722qvZxLy6sBMkq2DsUNRfl1JlXWRG4jvAUeSIq5ZloI4Rj3lGYiHXFzW4uRd+CrGsw4WP/Pt3gzBazHOlvZ/a1KE+/wpYfBGHs/xP42kjJ4hdm5aXl9i6yaDj4XkmX1kUG2RWu96M2UAbipd6BgWyJSUdVeCG2/v9R7qF2g2Nzam8sGKmQm6Nf4A5dlRv1ABAAA=
+    Metadata:
+      aws:cdk:path: BigcdktestStack/CDKMetadata/Default
+Parameters:
+  SsmParameterValueawsserviceamiamazonlinuxlatestamznamihvmx8664gp2C96584B6F00A464EAD1953AFF4B05118Parameter:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/amzn-ami-hvm-x86_64-gp2
+  AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3BucketA0002A50:
+    Type: String
+    Description: S3 bucket for asset "95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32"
+  AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32S3VersionKey81D23FFD:
+    Type: String
+    Description: S3 key for asset version "95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32"
+  AssetParameters95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32ArtifactHash6CC3E15A:
+    Type: String
+    Description: Artifact hash for asset "95a97151297a7380a9748416687b3a722d7d8b091f00bed17dd97845d11abd32"
