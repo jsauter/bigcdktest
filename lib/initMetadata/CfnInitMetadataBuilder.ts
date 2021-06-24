@@ -1,6 +1,5 @@
 import autoscaling = require("@aws-cdk/aws-autoscaling")
 import scriptAssets = require("./CfnInitScriptAsset")
-import packages = require('./CfnInitPackage');
 import iam = require('@aws-cdk/aws-iam')
 import cdk = require('@aws-cdk/core')
 import { FileInfo, CommandInfo } from "./CfnInitScriptAsset";
@@ -46,14 +45,12 @@ export interface CfnInitArtifacts {
 export class CfnInitMetadataBuilder {
   private asg: autoscaling.AutoScalingGroup
   private scripts: scriptAssets.CfnInitScriptAsset[]
-  private packages: packages.CfnInitPackage[];
   private configSetName: string;
 
   constructor(asg: autoscaling.AutoScalingGroup, configSetName?: string) {
     this.asg = asg;
     this.configSetName = configSetName || 'main'; // TODO: test with 'default' ?
     this.scripts = []
-    this.packages = [];
   }
 
   public withScript(script: scriptAssets.CfnInitScriptAsset): CfnInitMetadataBuilder {
@@ -70,11 +67,6 @@ export class CfnInitMetadataBuilder {
 
   public withScripts(scripts: scriptAssets.CfnInitScriptAsset[]): CfnInitMetadataBuilder {
     scripts.forEach(script => this.withScript(script))
-    return this;
-  }
-
-  public withPackage(pkg: packages.CfnInitPackage): CfnInitMetadataBuilder {
-    this.packages.push(pkg);
     return this;
   }
 
@@ -136,9 +128,7 @@ export class CfnInitMetadataBuilder {
           commands: this.arrayToObject(
             this.scripts.filter(script => script.isExecutable)
               .map(script => script.getCommandForMetadata())              
-          ),
-          packages: this.packages
-          .reduce(packages.CfnInitPackage.groupPackagesByFormat, {})
+          )
         }
       }
     } as MetaData;
