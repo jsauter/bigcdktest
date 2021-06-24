@@ -2,7 +2,7 @@ import * as cdk from '@aws-cdk/core';
 import * as s3 from '@aws-cdk/aws-s3';
 import * as asg from '@aws-cdk/aws-autoscaling';
 import * as ec2 from '@aws-cdk/aws-ec2';
-import initMetadata = require('@shaw-cdk/ec2service');
+import initMetadata = require('./initMetadata');
 import path = require('path');
 import { AssetStaging } from '@aws-cdk/core';
 
